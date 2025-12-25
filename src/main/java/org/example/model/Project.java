@@ -29,5 +29,4 @@ public class Project {
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "product_backlog_id", referencedColumnName = "id")
 	private ProductBacklog productBacklog;
-
 }

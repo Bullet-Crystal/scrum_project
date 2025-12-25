@@ -1,17 +1,16 @@
 package org.example.service;
 
-import java.util.List;
-
 import org.example.model.Task;
 import org.example.model.UserStory;
 
 public interface SprintBacklogService {
-	List<UserStoryService> getSprintUserStories();
 
-	void addSprintUserStories(UserStory userStory);
+	void addSprintUserStories(Long sprintId, Long productBacklogId, UserStory userStory);
 
-	void removeSprintUserStories(UserStory userStory);
+	void removeSprintUserStories(Long SprintId, UserStory userStory);
 
-	void removeSprintTask(Task task);
+	void removeSprintTask(Long sprintId, Task task);
+
+	void addSprintTask(Long sprintId, Long userStoryId, Task task);
 
 }

@@ -9,5 +9,9 @@ import org.example.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ProductBacklogRepository extends JpaRepository<ProductBacklog, Long> {
+<<<<<<< HEAD
 	Optional<ProductBacklog> findFirstByOrderByIdAsc();
+=======
+    Optional<ProductBacklog> findFirstByOrderByIdAsc();
+>>>>>>> origin/servicePull
 }
