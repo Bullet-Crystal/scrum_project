@@ -1,4 +1,4 @@
-package Model;
+package org.example.model;
 
 public enum Priority {
     MUST_HAVE,

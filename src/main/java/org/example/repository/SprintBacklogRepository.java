@@ -1,6 +1,6 @@
-package JPA;
+package org.example.repository;
 
-import Model.SprintBacklog;
+import org.example.model.SprintBacklog;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

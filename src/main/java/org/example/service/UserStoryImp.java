@@ -1,9 +1,9 @@
-package Service;
+package org.example.service;
 
-import JPA.UseCaseRepository;
-import Model.Statut;
+import org.example.repository.UseCaseRepository;
+import org.example.model.Statut;
 
-import Model.UserStory;
+import org.example.model.UserStory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,10 +21,17 @@ public class UserStoryImp implements UserStoryService {
     }
 
     @Override
-    public void modifierUserStory(UserStory oldstory, UserStory newstory) {
+    public void addUserStory(UserStory userStory) {
+        repository.save(userStory);
+    }
+
+
+
+    @Override
+    public void updateUserStory(UserStory oldstory, UserStory newstory) {
             UserStory story = repository.findById(oldstory.getId())
                             .orElseThrow(() -> new IllegalArgumentException("UserStory not found"));
-            story.setTitre(newstory.getTitre());
+            story.setTitle(newstory.getTitle());
             story.setDescription(newstory.getRole(),newstory.getAction(),newstory.getGoal());
             story.setPriority(newstory.getPriority());
             story.setUserStoryStatut(newstory.getUserStoryStatut());
@@ -38,16 +45,28 @@ public class UserStoryImp implements UserStoryService {
         return null;
     }
 
+
+
     @Override
-    public void modifierUserStoryStatus(UserStory u, Statut s) {
+    public void updateUserStoryStatus(UserStory u, Statut s) {
         UserStory userStory = repository.findById(u.getId())
-                .orElseThrow(() -> new IllegalStateException("User Story not found"));
+                .orElseThrow(() -> new IllegalArgumentException("User Story not found"));
         userStory.setUserStoryStatut(s);
         repository.save(userStory);
     }
 
+
+
     @Override
-    public void saveUserStory(UserStory u) {
-        repository.save(u);
+    public void deleteUserStory(UserStory u) {
+        if(repository.existsById(u.getId())) {
+            repository.delete(u);
+        }
+
+    }
+
+    @Override
+    public Boolean existsByTitle(String title) {
+        return repository.existsUserStoryByTitle(title);
     }
 }

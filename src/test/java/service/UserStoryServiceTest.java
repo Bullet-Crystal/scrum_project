@@ -1,9 +1,11 @@
-package Service;
+package service;
 
 
-import JPA.UseCaseRepository;
-import Model.Priority;
-import Model.UserStory;
+import org.example.model.Statut;
+import org.example.repository.UseCaseRepository;
+import org.example.model.Priority;
+import org.example.model.UserStory;
+import org.example.service.UserStoryImp;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -53,14 +55,14 @@ class UserStoryServiceTest {
         oldStory.setId(1L);
 
         UserStory newStory = new UserStory();
-        newStory.setTitre("Nouveau titre");
+        newStory.setTitle("Nouveau titre");
         newStory.setPriority(Priority.SHOULD_HAVE);
 
         when(repository.findById(1L)).thenReturn(Optional.of(oldStory));
 
-        userStoryService.modifierUserStory(oldStory, newStory);
+        userStoryService.updateUserStory(oldStory, newStory);
 
-        assertEquals("Nouveau titre", oldStory.getTitre());
+        assertEquals("Nouveau titre", oldStory.getTitle());
         assertEquals(Priority.SHOULD_HAVE, oldStory.getPriority());
         verify(repository).save(oldStory);
     }
@@ -75,14 +77,31 @@ class UserStoryServiceTest {
         when(repository.findById(1L)).thenReturn(Optional.empty());
 
         assertThrows(IllegalArgumentException.class,
-                () -> userStoryService.modifierUserStory(oldStory, newStory));
+                () -> userStoryService.updateUserStory(oldStory, newStory));
+    }
+    @Test
+    void modifierUserStoryStatut_shouldUpdateFields_whenUserStoryIdExists() {
+        UserStory userStory = new UserStory();
+        userStory.setId(1L);
+        when(repository.findById(1L)).thenReturn(Optional.of(userStory));
+        userStoryService.updateUserStoryStatus(userStory, Statut.DONE);
+        assertEquals(Statut.DONE,userStory.getUserStoryStatut());
+        verify(repository).save(userStory);
+    }
+
+    @Test
+    void modifierTaskStatut_shouldThrowException_whenTaskIdDoesNotExist() {
+        UserStory userStory = new UserStory();
+        userStory.setId(1L);
+        when(repository.findById(1L)).thenReturn(Optional.empty());
+        assertThrows(IllegalArgumentException.class, () -> userStoryService.updateUserStoryStatus(userStory, Statut.DONE));
     }
 
     @Test
     void saveUserStory_shouldCallRepositorySave() {
         UserStory us = new UserStory();
 
-        userStoryService.saveUserStory(us);
+        userStoryService.addUserStory(us);
 
         verify(repository).save(us);
     }

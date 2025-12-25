@@ -1,24 +1,22 @@
-package Model;
+package org.example.model;
 
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.List;
-
-@Entity
+@Builder
 @Getter
 @Setter
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-
-public class Epic {
+@Entity
+public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String title;
+    private String titre;
     private String description;
-
-    @OneToMany(mappedBy = "epic")
-    List<UserStory> userStoryList;
+    @ManyToOne
+    @JoinColumn(name = "user_story_id")
+    UserStory userStory;
+    Statut taskStatut = Statut.TO_DO;
 }

@@ -1,9 +1,10 @@
-package Service;
+package service;
 
 
-import JPA.TaskRepository;
-import Model.Statut;
-import Model.Task;
+import org.example.repository.TaskRepository;
+import org.example.model.Statut;
+import org.example.model.Task;
+import org.example.service.TaskServiceImp;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

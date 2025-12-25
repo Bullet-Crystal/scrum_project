@@ -1,8 +1,8 @@
-package Service;
+package org.example.service;
 
 
-import Model.Task;
-import Model.UserStory;
+import org.example.model.Task;
+import org.example.model.UserStory;
 
 
 

@@ -1,8 +1,8 @@
-package Service;
+package org.example.service;
 
-import JPA.TaskRepository;
-import Model.Statut;
-import Model.Task;
+import org.example.repository.TaskRepository;
+import org.example.model.Statut;
+import org.example.model.Task;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class TaskServiceImp implements TaskService {
     private final TaskRepository taskRepository;
+
 
     @Override
     public void modifierTask(Task oldtask,Task newtask) {

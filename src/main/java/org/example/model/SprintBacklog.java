@@ -1,8 +1,9 @@
-package Model;
+package org.example.model;
 
 import lombok.*;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -20,9 +21,9 @@ public class SprintBacklog {
     private Date dateDebut;
     private Date dateFin;
     @OneToMany(mappedBy = "sprintBacklog", cascade = CascadeType.ALL)
-    List<UserStory> userStories;
+    List<UserStory> userStories =new ArrayList<>();
     @OneToMany(mappedBy = "sprintBacklog", cascade = CascadeType.ALL)
-    List<Task> tasks;
+    List<Task> tasks=new ArrayList<>();
 
     public void addUserStory(UserStory userStory) {
         this.userStories.add(userStory);
@@ -31,7 +32,9 @@ public class SprintBacklog {
         this.tasks.add(task);
     }
     public void removeUserStory(UserStory userStory) {
-        this.userStories.remove(userStory);
+
+            this.userStories.remove(userStory);
+
     }
     public void removeTask(Task task) {
         this.tasks.remove(task);

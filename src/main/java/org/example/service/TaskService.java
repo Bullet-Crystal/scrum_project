@@ -1,7 +1,7 @@
-package Service;
+package org.example.service;
 
-import Model.Statut;
-import Model.Task;
+import org.example.model.Statut;
+import org.example.model.Task;
 
 public interface TaskService {
 
