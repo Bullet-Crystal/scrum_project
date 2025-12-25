@@ -16,7 +16,7 @@ public class TaskServiceImp implements TaskService {
 		Task task2 = taskRepository.findById(oldtask.getId())
 				.orElseThrow(() -> new IllegalArgumentException("Task not found"));
 		task2.setId(newtask.getId());
-		task2.setTitre(newtask.getTitre());
+		task2.setTitle(newtask.getTitle());
 		task2.setDescription(newtask.getDescription());
 		taskRepository.save(task2);
 	}

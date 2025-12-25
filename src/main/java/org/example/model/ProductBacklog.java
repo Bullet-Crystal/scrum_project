@@ -45,4 +45,8 @@ public class ProductBacklog {
 		epic.setProductBacklog(this);
 		this.epics.add(epic);
 	}
+
+	public Boolean containsUserStory(UserStory story) {
+		return this.epics.contains(story);
+	}
 }
