@@ -7,6 +7,8 @@ import org.example.model.UserStory;
 public interface ProductBacklogService {
 	ProductBacklog getProductBacklogById(Long id);
 
+	ProductBacklog createProductBacklog(String title);
+
 	void addUserStoryToBacklog(Long backlogId, UserStory userStory);
 
 	void deleteUserStoryFromBacklog(Long backlogId, Long userStoryId);

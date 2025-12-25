@@ -19,9 +19,15 @@ public class ProductBacklogServiceImp implements ProductBacklogService {
 
 	@Override
 	public ProductBacklog getProductBacklogById(Long id) {
-
 		return productBacklogRepo.findById(id)
 				.orElseThrow(() -> new EntityNotFoundException("ProductBacklog not Found !"));
+	}
+
+	@Override
+	public ProductBacklog createProductBacklog(String title) {
+		ProductBacklog backlog = new ProductBacklog();
+		backlog.setTitle(title);
+		return productBacklogRepo.save(backlog);
 	}
 
 	@Transactional
