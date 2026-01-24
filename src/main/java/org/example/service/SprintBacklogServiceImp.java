@@ -18,6 +18,7 @@ public class SprintBacklogServiceImp implements SprintBacklogService {
 	private final SprintBacklogRepository sprintBacklogRepository;
 	private final UserStoryService userStoryService;
 	private final ProductBacklogService productBacklogService;
+	private final ProjectService projectService;
 
 	@Override
 	@Transactional
@@ -29,6 +30,12 @@ public class SprintBacklogServiceImp implements SprintBacklogService {
 			sprintBacklog.addUserStory(userStory);
 			sprintBacklogRepository.save(sprintBacklog);
 		}
+	}
+
+	public void isAuthorizedInSprint(Long sprintId, String username) {
+		SprintBacklog sprintBacklog = sprintBacklogRepository.findById(sprintId)
+				.orElseThrow(() -> new IllegalArgumentException("Sprint backlog not found"));
+		projectService.isUserAuthorized(sprintBacklog.getProject().getId(), username);
 	}
 
 	// test verifier

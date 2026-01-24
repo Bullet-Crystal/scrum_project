@@ -194,6 +194,8 @@ class EpicServiceTest {
 		String result = epicService.vizualizeUserStoriesFromEpic(1L);
 
 		assertThat(result)
-				.isEqualTo("Login\nRegister\n");
+				.isEqualTo("Users Stories for epicId : 1\n" +
+						"\t Title : Login, Statusnull\n" +
+						"\t Title : Register, Statusnull\n");
 	}
 }

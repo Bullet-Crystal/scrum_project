@@ -1,7 +1,7 @@
 package org.example.service;
 
 import org.example.repository.UseCaseRepository;
-import org.example.model.Statut;
+import org.example.model.Status;
 
 import org.example.model.UserStory;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +31,7 @@ public class UserStoryImp implements UserStoryService {
 		story.setTitle(newstory.getTitle());
 		story.setDescription(newstory.getRole(), newstory.getAction(), newstory.getGoal());
 		story.setPriority(newstory.getPriority());
-		story.setUserStoryStatut(newstory.getUserStoryStatut());
+		story.setStatus(newstory.getStatus());
 		story.setCritereAcceptation(newstory.getCritereAcceptation());
 		repository.save(story);
 	}
@@ -42,10 +42,10 @@ public class UserStoryImp implements UserStoryService {
 	}
 
 	@Override
-	public void updateUserStoryStatus(UserStory u, Statut s) {
+	public void updateUserStoryStatus(UserStory u, Status s) {
 		UserStory userStory = repository.findById(u.getId())
 				.orElseThrow(() -> new IllegalArgumentException("User Story not found"));
-		userStory.setUserStoryStatut(s);
+		userStory.setStatus(s);
 		repository.save(userStory);
 	}
 

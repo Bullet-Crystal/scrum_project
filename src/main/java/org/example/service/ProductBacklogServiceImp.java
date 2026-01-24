@@ -4,17 +4,19 @@ import org.example.model.Priority;
 import org.example.model.ProductBacklog;
 import org.example.model.UserStory;
 import org.example.repository.ProductBacklogRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import jakarta.persistence.EntityNotFoundException;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class ProductBacklogServiceImp implements ProductBacklogService {
 	private final ProductBacklogRepository productBacklogRepo;
+	private final ProjectService projectService;
 	private final UserStoryService userStoryService;
 
 	@Override
@@ -25,9 +27,15 @@ public class ProductBacklogServiceImp implements ProductBacklogService {
 
 	@Override
 	public ProductBacklog createProductBacklog(String title) {
-		ProductBacklog backlog = new ProductBacklog();
-		backlog.setTitle(title);
+		ProductBacklog backlog = ProductBacklog.builder()
+				.title(title)
+				.build();
 		return productBacklogRepo.save(backlog);
+	}
+
+	public void isAuthorizedInBacklog(Long backlogId, String username) {
+		ProductBacklog backlog = getProductBacklogById(backlogId);
+		projectService.isUserAuthorized(backlog.getProject().getId(), username);
 	}
 
 	@Transactional

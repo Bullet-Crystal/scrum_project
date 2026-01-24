@@ -6,12 +6,15 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.example.dto.LoginRequestDto;
+import org.example.dto.LoginResponseDto;
+import org.example.dto.RegisterRequestDto;
 import org.example.model.RoleType;
 import org.example.model.User;
-import org.example.repository.UserRepository;
-import org.example.utility.JwtUtil;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.example.security.JwtUtil;
+import org.example.service.UserService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,61 +22,113 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 public class AuthController {
 
-	private final AuthenticationManager authManager;
-	private final UserRepository userRepository;
+	private final UserService userService;
 	private final JwtUtil jwtUtil;
 	private final PasswordEncoder passwordEncoder;
 
-	public AuthController(AuthenticationManager authManager,
-			UserRepository repo,
+	public AuthController(
+			UserService service,
 			JwtUtil jwtUtil,
 			PasswordEncoder encoder) {
-		this.authManager = authManager;
-		this.userRepository = repo;
+		this.userService = service;
 		this.jwtUtil = jwtUtil;
 		this.passwordEncoder = encoder;
 	}
 
 	@PostMapping("/register")
-	public Map<String, String> register(@RequestBody Map<String, Object> body) {
-		String username = (String) body.get("username");
-		String password = (String) body.get("password");
-		List<String> rolesList = (List<String>) body.get("roles");
+	public ResponseEntity<?> register(@RequestBody RegisterRequestDto request) {
+		try {
+			String username = (String) request.getUsername();
+			String password = (String) request.getPassword();
 
-		if (userRepository.findByUsername(username).isPresent()) {
-			throw new RuntimeException("User already exists");
+			// Validation
+			if (username == null || username.isBlank()) {
+				return ResponseEntity
+						.badRequest()
+						.body(Map.of("error", "Username is required"));
+			}
+
+			if (password == null || password.length() < 8) {
+				return ResponseEntity
+						.badRequest()
+						.body(Map.of("error", "Password must be at least 8 characters"));
+			}
+
+			// Check if user exists
+			if (userService.userExists(username)) {
+				return ResponseEntity
+						.status(HttpStatus.CONFLICT)
+						.body(Map.of("error", "User already exists"));
+			}
+
+			// Create user
+			List<String> rolesList = request.getRoles();
+			Set<RoleType> roles = rolesList.stream()
+					.map(RoleType::valueOf)
+					.collect(Collectors.toSet());
+
+			User user = User.builder()
+					.username(username)
+					.password(passwordEncoder.encode(password))
+					.roles(roles)
+					.build();
+
+			userService.createUser(user);
+			String token = jwtUtil.generateToken(username, roles);
+
+			return ResponseEntity
+					.status(HttpStatus.CREATED)
+					.body(Map.of("jwt", token));
+
+		} catch (Exception e) {
+			return ResponseEntity
+					.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					// .body(Map.of("error", "Registration failed"));
+					.body(Map.of("error", e.getMessage()));
 		}
-
-		Set<RoleType> roles = rolesList.stream()
-				.map(RoleType::valueOf)
-				.collect(Collectors.toSet());
-
-		User user = User.builder()
-				.username(username)
-				.password(passwordEncoder.encode(password))
-				.roles(roles)
-				.build();
-
-		userRepository.save(user);
-
-		String token = jwtUtil.generateToken(username);
-		return Map.of("jwt", token);
 	}
 
 	@PostMapping("/login")
-	public Map<String, String> login(@RequestBody Map<String, Object> body) throws Exception {
-		String username = (String) body.get("username");
-		String password = (String) body.get("password");
-		authManager.authenticate(
-				new UsernamePasswordAuthenticationToken(username, password));
+	public ResponseEntity<?> login(@RequestBody LoginRequestDto request) {
+		try {
+			String username = request.getUsername();
+			String password = request.getPassword();
 
-		User user = userRepository.findByUsername(username)
-				.orElseThrow(() -> new RuntimeException("User not found"));
+			// Check if user exists
+			if (!userService.userExists(username)) {
+				return ResponseEntity
+						.status(HttpStatus.UNAUTHORIZED)
+						.body(Map.of("error", "Invalid username or password"));
+			}
 
-		String token = jwtUtil.generateToken(username);
-		return Map.of("jwt", token);
+			// Get user and verify password
+			User user = userService.getUserByUsername(username);
+			if (!passwordEncoder.matches(password, user.getPassword())) {
+				return ResponseEntity
+						.status(HttpStatus.UNAUTHORIZED)
+						.body(Map.of("error", "Invalid username or password"));
+			}
+
+			// Generate token
+			String token = jwtUtil.generateToken(username, user.getRoles());
+
+			// Prepare response
+			LoginResponseDto response = new LoginResponseDto();
+			response.setJwt(token);
+			response.setUsername(username);
+			response.setRoles(user.getRoles().stream()
+					.map(RoleType::name)
+					.collect(Collectors.toSet()));
+
+			return ResponseEntity.ok(response);
+
+		} catch (Exception e) {
+			return ResponseEntity
+					.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body(Map.of("error", "Login failed"));
+		}
 	}
 }

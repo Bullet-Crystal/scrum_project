@@ -5,7 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import org.example.model.*;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -17,16 +18,20 @@ import jakarta.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Table(name = "projects")
 public class Project {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long Id;
+	private Long id;
 	private String title;
+	private String description;
 	@CreationTimestamp
-	private Date dateDeCreation;
-	@OneToMany(mappedBy = "sprintBacklog", cascade = CascadeType.ALL)
+	private LocalDate creationDate;
+	@OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
 	private List<SprintBacklog> sprintBacklogs;
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "product_backlog_id", referencedColumnName = "id")
 	private ProductBacklog productBacklog;
+	@OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
+	private List<User> users;
 }

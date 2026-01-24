@@ -1,12 +1,16 @@
 package org.example.service;
 
-import org.example.model.Statut;
+import org.example.model.Status;
 import org.example.model.Task;
 
 public interface TaskService {
 
 	void modifierTask(Task task, Task task1);
 
-	void modifierTaskStatus(Task task, Statut statut);
+	Task getTaskById(Long id);
+
+	void isAuthorizedInTask(Long id, String username);
+
+	void modifierTaskStatus(Task task, Status statut);
 
 }

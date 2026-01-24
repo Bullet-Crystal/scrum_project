@@ -1,6 +1,6 @@
 package org.example.service;
 
-import org.example.model.Statut;
+import org.example.model.Status;
 
 import org.example.model.UserStory;
 import org.springframework.stereotype.Service;
@@ -17,7 +17,7 @@ public interface UserStoryService {
 
 	Boolean isAccepted(UserStory u);
 
-	void updateUserStoryStatus(UserStory u, Statut s);
+	void updateUserStoryStatus(UserStory u, Status s);
 
 	void deleteUserStory(UserStory u);
 

@@ -2,12 +2,21 @@ package org.example.model;
 
 import lombok.*;
 
-import java.util.Date;
-import jakarta.persistence.*;
-import lombok.*;
-
-import java.util.ArrayList;
+import java.time.LocalDate;
 import java.util.List;
+
+import org.hibernate.annotations.CreationTimestamp;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 
 @Getter
 @Setter
@@ -21,16 +30,18 @@ public class UserStory {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	private String title; // should be title
+	private String title;
 	private String role;
 	private String action;
 	private String goal;
 	private Priority priority;
+	@CreationTimestamp
+	private LocalDate creationDate;
 	@Enumerated(EnumType.STRING)
-	private Statut userStoryStatut = Statut.TO_DO; // par defaut user story en todo
+	private Status status;
 	private String critereAcceptation;
 	@OneToMany(mappedBy = "userStory", cascade = CascadeType.ALL)
-	private List<Task> tasks = new ArrayList<>();
+	private List<Task> tasks;
 	@ManyToOne
 	@JoinColumn(name = "epic_id")
 	Epic epic;

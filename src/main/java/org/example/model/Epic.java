@@ -5,8 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -24,10 +24,12 @@ public class Epic {
 	private Long Id;
 	private String title;
 	private String description;
+	private String goal;
 	@CreationTimestamp
-	private Date creationDate;
+	private LocalDate creationDate;
+	private LocalDate targetDate;
 	@OneToMany(mappedBy = "epic")
-	List<UserStory> userStories = new ArrayList<>();
+	List<UserStory> userStories;
 
 	@ManyToOne
 	@JoinColumn(name = "product_backlog_id")
@@ -35,6 +37,9 @@ public class Epic {
 
 	public void addUserStory(UserStory userStory) {
 		userStory.setEpic(this);
+		if (this.userStories == null) {
+			this.userStories = new ArrayList<>();
+		}
 		this.getUserStories().add(userStory);
 	}
 

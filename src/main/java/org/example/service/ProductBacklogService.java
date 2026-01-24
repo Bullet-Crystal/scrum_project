@@ -9,6 +9,8 @@ public interface ProductBacklogService {
 
 	ProductBacklog createProductBacklog(String title);
 
+	void isAuthorizedInBacklog(Long backlogId, String username);
+
 	void addUserStoryToBacklog(Long backlogId, UserStory userStory);
 
 	void deleteUserStoryFromBacklog(Long backlogId, Long userStoryId);

@@ -9,6 +9,8 @@ public interface SprintBacklogService {
 
 	void removeSprintUserStories(Long SprintId, UserStory userStory);
 
+	void isAuthorizedInSprint(Long sprintId, String username);
+
 	void removeSprintTask(Long sprintId, Task task);
 
 	void addSprintTask(Long sprintId, Long userStoryId, Task task);

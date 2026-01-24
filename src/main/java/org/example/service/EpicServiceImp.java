@@ -77,9 +77,9 @@ public class EpicServiceImp implements EpicService {
 	@Override
 	public String vizualizeUserStoriesFromEpic(Long epicId) {
 		List<UserStory> userStories = getUserStoriesFromEpic(epicId);
-		String builtString = "";
+		String builtString = "Users Stories for epicId : " + epicId + "\n";
 		for (UserStory userStory : userStories) {
-			builtString += userStory.getTitle() + "\n";
+			builtString += "\t Title : " + userStory.getTitle() + ", Status" + userStory.getStatus() + "\n";
 		}
 		return builtString;
 	}

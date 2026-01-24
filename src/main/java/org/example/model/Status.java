@@ -1,6 +1,6 @@
 package org.example.model;
 
-public enum Statut {
+public enum Status {
 	TO_DO,
 	IN_PROGRESS,
 	DONE

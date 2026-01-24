@@ -7,10 +7,12 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class ProductBacklog {
 
@@ -23,30 +25,40 @@ public class ProductBacklog {
 	@OneToOne(mappedBy = "productBacklog", cascade = CascadeType.ALL)
 	private Project project;
 	@OneToMany(mappedBy = "productBacklog", cascade = CascadeType.ALL)
-	private List<UserStory> userStories = new ArrayList<>();
+	private List<UserStory> userStories;
 	@OneToMany(mappedBy = "productBacklog", cascade = CascadeType.ALL)
-	private List<Epic> epics = new ArrayList<>();
-
-	public ProductBacklog() {
-		this.setTitle("The Product Backlog");
-	}
+	private List<Epic> epics;
 
 	public void addUserStory(UserStory story) {
 		story.setProductBacklog(this);
+		if (this.userStories == null) {
+			this.userStories = new ArrayList<>();
+		}
 		this.userStories.add(story);
 	}
 
 	public void removeUserStory(UserStory story) {
+		if (this.userStories == null) {
+			return;
+		}
 		story.setProductBacklog(null);
 		this.userStories.remove(story);
 	}
 
 	public void addEpic(Epic epic) {
 		epic.setProductBacklog(this);
+		if (this.epics == null) {
+			this.epics = new ArrayList<>();
+		}
 		this.epics.add(epic);
 	}
 
 	public Boolean containsUserStory(UserStory story) {
-		return this.epics.contains(story);
+		for (Epic e : epics) {
+			if (e.getUserStories().contains(story)) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

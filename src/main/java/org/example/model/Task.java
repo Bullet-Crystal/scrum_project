@@ -18,5 +18,8 @@ public class Task {
 	@ManyToOne
 	@JoinColumn(name = "user_story_id")
 	UserStory userStory;
-	Statut taskStatut = Statut.TO_DO;
+	Status status = Status.TO_DO;
+	@ManyToOne
+	@JoinColumn(name = "sprint_backlog_id")
+	SprintBacklog sprintBacklog;
 }

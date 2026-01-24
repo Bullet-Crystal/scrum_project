@@ -1,7 +1,7 @@
 package org.example.service;
 
 import org.example.repository.TaskRepository;
-import org.example.model.Statut;
+import org.example.model.Status;
 import org.example.model.Task;
 import org.example.service.TaskServiceImp;
 import org.junit.jupiter.api.Test;
@@ -57,21 +57,21 @@ public class TaskServiceTest {
 	}
 
 	@Test
-	void modifierTaskStatut_shouldUpdateFields_whenTaskIdExists() {
+	void modifierTaskStatus_shouldUpdateFields_whenTaskIdExists() {
 		Task oldTask = new Task();
 		oldTask.setId(1L);
 		when(repository.findById(1L)).thenReturn(Optional.of(oldTask));
-		service.modifierTaskStatus(oldTask, Statut.DONE);
-		assertEquals(Statut.DONE, oldTask.getTaskStatut());
+		service.modifierTaskStatus(oldTask, Status.DONE);
+		assertEquals(Status.DONE, oldTask.getStatus());
 		verify(repository).save(oldTask);
 	}
 
 	@Test
-	void modifierTaskStatut_shouldThrowException_whenTaskIdDoesNotExist() {
+	void modifierTaskStatus_shouldThrowException_whenTaskIdDoesNotExist() {
 		Task oldTask = new Task();
 		oldTask.setId(1L);
 		when(repository.findById(1L)).thenReturn(Optional.empty());
-		assertThrows(IllegalArgumentException.class, () -> service.modifierTaskStatus(oldTask, Statut.DONE));
+		assertThrows(IllegalArgumentException.class, () -> service.modifierTaskStatus(oldTask, Status.DONE));
 	}
 
 }

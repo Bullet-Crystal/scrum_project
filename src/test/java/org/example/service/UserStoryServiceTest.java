@@ -1,6 +1,6 @@
 package org.example.service;
 
-import org.example.model.Statut;
+import org.example.model.Status;
 import org.example.repository.UseCaseRepository;
 import org.example.model.Priority;
 import org.example.model.UserStory;
@@ -79,22 +79,22 @@ class UserStoryServiceTest {
 	}
 
 	@Test
-	void modifierUserStoryStatut_shouldUpdateFields_whenUserStoryIdExists() {
+	void modifierUserStoryStatus_shouldUpdateFields_whenUserStoryIdExists() {
 		UserStory userStory = new UserStory();
 		userStory.setId(1L);
 		when(repository.findById(1L)).thenReturn(Optional.of(userStory));
-		userStoryService.updateUserStoryStatus(userStory, Statut.DONE);
-		assertEquals(Statut.DONE, userStory.getUserStoryStatut());
+		userStoryService.updateUserStoryStatus(userStory, Status.DONE);
+		assertEquals(Status.DONE, userStory.getStatus());
 		verify(repository).save(userStory);
 	}
 
 	@Test
-	void modifierTaskStatut_shouldThrowException_whenTaskIdDoesNotExist() {
+	void modifierTaskStatus_shouldThrowException_whenTaskIdDoesNotExist() {
 		UserStory userStory = new UserStory();
 		userStory.setId(1L);
 		when(repository.findById(1L)).thenReturn(Optional.empty());
 		assertThrows(IllegalArgumentException.class,
-				() -> userStoryService.updateUserStoryStatus(userStory, Statut.DONE));
+				() -> userStoryService.updateUserStoryStatus(userStory, Status.DONE));
 	}
 
 	@Test
